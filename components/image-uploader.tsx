@@ -4,10 +4,14 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Upload } from "lucide-react"
 
-export function ImageUploader({ onUpload }) {
+interface ImageUploaderProps {
+  onUpload: (file: File) => void
+}
+
+export function ImageUploader({ onUpload }: ImageUploaderProps) {
   const [isDragging, setIsDragging] = useState(false)
 
-  const handleDragOver = (e) => {
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault()
     setIsDragging(true)
   }
@@ -16,7 +20,7 @@ export function ImageUploader({ onUpload }) {
     setIsDragging(false)
   }
 
-  const handleDrop = (e) => {
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault()
     setIsDragging(false)
 
@@ -25,7 +29,7 @@ export function ImageUploader({ onUpload }) {
     }
   }
 
-  const handleFileChange = (e) => {
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       onUpload(e.target.files[0])
     }

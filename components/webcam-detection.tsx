@@ -110,12 +110,13 @@ export function WebcamDetection({ model, isActive, onDetection }: WebcamDetectio
 
     return () => {
       // Clean up the video stream
-      if (videoRef.current?.srcObject) {
-        const stream = videoRef.current.srcObject as MediaStream
+      const video = videoRef.current
+      if (video?.srcObject) {
+        const stream = video.srcObject as MediaStream
         stream.getTracks().forEach(track => {
           track.stop()
         })
-        videoRef.current.srcObject = null
+        video.srcObject = null
       }
     }
   }, [])

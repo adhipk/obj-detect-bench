@@ -9,15 +9,27 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { ArrowLeft, Pause, Play } from "lucide-react"
 import { WebcamDetection } from "@/components/webcam-detection"
 import { DetectionResults } from "@/components/detection-results"
+import { ModelType } from "@/lib/model-loader"
+
+interface Detection {
+  label: string
+  confidence: number
+  bbox: number[]
+}
+
+interface PerformanceMetrics {
+  fps: number
+  inferenceTime: number
+}
 
 export default function WebcamDetectionPage() {
-  const [selectedModel, setSelectedModel] = useState("yolo")
+  const [selectedModel, setSelectedModel] = useState<ModelType>("yolo")
   const [isDetecting, setIsDetecting] = useState(false)
-  const [detections, setDetections] = useState([])
+  const [detections, setDetections] = useState<Detection[]>([])
   const [fps, setFps] = useState(0)
   const [inferenceTime, setInferenceTime] = useState(0)
 
-  const handleDetections = (results, metrics) => {
+  const handleDetections = (results: Detection[], metrics: PerformanceMetrics) => {
     setDetections(results)
     setFps(metrics.fps)
     setInferenceTime(metrics.inferenceTime)
@@ -53,7 +65,7 @@ export default function WebcamDetectionPage() {
                 </>
               )}
             </Button>
-            <Select value={selectedModel} onValueChange={setSelectedModel}>
+            <Select value={selectedModel} onValueChange={(value) => setSelectedModel(value as ModelType)}>
               <SelectTrigger className="w-[180px]">
                 <SelectValue placeholder="Select Model" />
               </SelectTrigger>

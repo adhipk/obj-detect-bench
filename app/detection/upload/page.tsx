@@ -11,25 +11,33 @@ import { ArrowLeft, Upload } from "lucide-react"
 import { ImageUploader } from "@/components/image-uploader"
 import { DetectionResults } from "@/components/detection-results"
 
+interface Detection {
+  label: string
+  confidence: number
+  bbox: number[]
+}
+
 export default function ImageUploadPage() {
   const [selectedModel, setSelectedModel] = useState("yolo")
   const [imageUrl, setImageUrl] = useState("")
-  const [detections, setDetections] = useState([])
+  const [detections, setDetections] = useState<Detection[]>([])
   const [inferenceTime, setInferenceTime] = useState(0)
   const [isProcessing, setIsProcessing] = useState(false)
 
-  const handleImageUpload = (file) => {
+  const handleImageUpload = (file: File) => {
     if (!file) return
 
     const reader = new FileReader()
     reader.onload = (e) => {
-      setImageUrl(e.target.result)
-      processImage(e.target.result)
+      if (e.target?.result && typeof e.target.result === 'string') {
+        setImageUrl(e.target.result)
+        processImage()
+      }
     }
     reader.readAsDataURL(file)
   }
 
-  const processImage = async (imageData) => {
+  const processImage = async () => {
     setIsProcessing(true)
     setDetections([])
 
@@ -86,7 +94,7 @@ export default function ImageUploadPage() {
               value={selectedModel}
               onValueChange={(value) => {
                 setSelectedModel(value)
-                if (imageUrl) processImage(imageUrl)
+                if (imageUrl) processImage()
               }}
             >
               <SelectTrigger className="w-[180px]">

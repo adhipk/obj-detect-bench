@@ -1,7 +1,18 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Loader2 } from "lucide-react"
 
-export function DetectionResults({ detections = [], isLoading = false }) {
+interface Detection {
+  label: string
+  confidence: number
+  bbox: number[]
+}
+
+interface DetectionResultsProps {
+  detections?: Detection[]
+  isLoading?: boolean
+}
+
+export function DetectionResults({ detections = [], isLoading = false }: DetectionResultsProps) {
   if (isLoading) {
     return (
       <Card>
@@ -24,7 +35,7 @@ export function DetectionResults({ detections = [], isLoading = false }) {
   }
 
   // Group detections by label
-  const groupedDetections = detections.reduce((acc, detection) => {
+  const groupedDetections = detections.reduce<Record<string, Detection[]>>((acc, detection) => {
     if (!acc[detection.label]) {
       acc[detection.label] = []
     }
